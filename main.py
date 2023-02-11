@@ -241,7 +241,12 @@ class App:
             exif_dict['GPS'][piexif.GPSIFD.GPSLatitudeRef] = "N" if img_obj.lat_dec >= 0 else "S"
             exif_dict['GPS'][piexif.GPSIFD.GPSLongitude] = decimal_to_dms(img_obj.long_dec)
             exif_dict['GPS'][piexif.GPSIFD.GPSLongitudeRef] = "E" if img_obj.long_dec >= 0 else "W"
-            exif_dict['GPS'][piexif.GPSIFD.GPSAltitude] = ((int(img_obj.altitude * 10000), 10000))
+
+            if img_obj.altitude >= 0:
+                exif_dict['GPS'][piexif.GPSIFD.GPSAltitudeRef] = 0
+            else:
+                exif_dict['GPS'][piexif.GPSIFD.GPSAltitudeRef] = 1
+            exif_dict['GPS'][piexif.GPSIFD.GPSAltitude] = ((int(abs(img_obj.altitude) * 10000), 10000))
 
             # Write the changes to the image
             exif_bytes = piexif.dump(exif_dict)
